@@ -76,7 +76,10 @@ namespace NorthwindConsole
                             else
                             {
                                 logger.Info("Validation passed");
-                                // TODO: save category to db
+                                db.Categories.Add(category);
+                                db.SaveChanges();
+                                logger.Info("Category added - {CategoryName}", category.CategoryName);
+
                             }
                         }
                         if (!isValid)
@@ -167,16 +170,89 @@ namespace NorthwindConsole
                             Console.WriteLine("This product is discontinued (true/false):");
                             product.Discontinued = Convert.ToBoolean(Console.ReadLine());
 
+                        ValidationContext context = new ValidationContext(product, null, null);
+                        List<ValidationResult> results = new List<ValidationResult>();
 
-
-
-
-
+                        var isValid = Validator.TryValidateObject(product, context, results, true);
+                        if (isValid)
+                        {
+                            // check for unique name
+                            if (db.Products.Any(p => p.ProductName == product.ProductName))
+                            {
+                                // generate validation error
+                                isValid = false;
+                                results.Add(new ValidationResult("Name exists", new string[] { "ProductName" }));
+                            }
+                            else
+                            {
+                                logger.Info("Validation passed");
+                                db.Products.Add(product);
+                                db.SaveChanges();
+                                logger.Info("Product added - {ProductName}", product.ProductName);
+                            }
+                        }
+                        if (!isValid)
+                        {
+                            foreach (var result in results)
+                            {
+                                logger.Error($"{result.MemberNames.First()} : {result.ErrorMessage}");
+                            }
+                        }
 
                         }
 
                         if(choice == "2")
                         {
+                            var db = new NWConsole_96_RDHContext();
+
+                            Console.WriteLine("Choose a product to edit:");
+                            var product1 = GetProduct(db);
+                            if(product1 != null)
+                            {
+                            Products UpdatedProduct = new Products();
+                            UpdatedProduct.ProductId = product1.ProductId;
+                            Console.WriteLine("Enter a product name:");
+                            UpdatedProduct.ProductName = Console.ReadLine();
+                            var Suppliers = db.Suppliers.OrderBy(b => b.SupplierId);
+                            foreach(Suppliers s in Suppliers)
+                            {
+                                Console.WriteLine($"{s.SupplierId}: {s.CompanyName}");
+                            }
+                            Console.WriteLine("Select a Supplier ID:");
+                            UpdatedProduct.SupplierId = Convert.ToInt32(Console.ReadLine());
+                            var Categories = db.Categories.OrderBy(b => b.CategoryId);
+                            foreach(Categories c in Categories)
+                            {
+                                Console.WriteLine($"{c.CategoryId}: {c.CategoryName}");
+                            }
+                            Console.WriteLine("Select a Category ID:"); 
+                            UpdatedProduct.CategoryId = Convert.ToInt32(Console.ReadLine());
+                            Console.WriteLine("Enter a quantity per unit:");
+                            UpdatedProduct.QuantityPerUnit = Console.ReadLine();
+                            Console.WriteLine("Enter the number of units in stock:");
+                            UpdatedProduct.UnitsInStock = Convert.ToInt16(Console.ReadLine());
+                            Console.WriteLine("Enter a Unit Price:");
+                            UpdatedProduct.UnitPrice = Convert.ToInt32(Console.ReadLine());
+                            Console.WriteLine("Enter the number of units on order:");
+                            UpdatedProduct.UnitsOnOrder = Convert.ToInt16(Console.ReadLine());
+                            Console.WriteLine("Enter the number of units to reorder at:");
+                            UpdatedProduct.ReorderLevel = Convert.ToInt16(Console.ReadLine());
+                            Console.WriteLine("This product is discontinued (true/false):");
+                            UpdatedProduct.Discontinued = Convert.ToBoolean(Console.ReadLine());
+
+
+                                Products product = db.Products.Find(UpdatedProduct.ProductId);
+                                product.ProductName = UpdatedProduct.ProductName;
+                                product.SupplierId = UpdatedProduct.SupplierId;
+                                product.CategoryId = UpdatedProduct.CategoryId;
+                                product.QuantityPerUnit = UpdatedProduct.QuantityPerUnit;
+                                product.UnitsInStock = UpdatedProduct.UnitsInStock;
+                                product.UnitsOnOrder = UpdatedProduct.UnitsOnOrder;
+                                product.ReorderLevel = UpdatedProduct.ReorderLevel;
+                                product.Discontinued = UpdatedProduct.Discontinued;
+                                db.SaveChanges();
+                                logger.Info("Product updated - {ProductName}", UpdatedProduct.ProductName);
+                            }
 
                         }
 
@@ -201,5 +277,28 @@ namespace NorthwindConsole
             logger.Info("Program ended");
         }
 
+        public static Products GetProduct(NWConsole_96_RDHContext db)
+        {
+
+            var products = db.Products.OrderBy(b => b.ProductId);
+            foreach (Products p in products)
+            {
+                Console.WriteLine($"{p.ProductId}: {p.ProductName}");
+            }
+            if (int.TryParse(Console.ReadLine(), out int ProductId))
+            {
+                Products product = db.Products.FirstOrDefault(b => b.ProductId == ProductId);
+                if (product != null)
+                {
+                    return product;
+                }
+            }
+            logger.Error("Invalid Product ID");
+            return null;
+
+            
+        }
+
+        
     }
 }
