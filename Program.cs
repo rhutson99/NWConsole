@@ -130,12 +130,48 @@ namespace NorthwindConsole
                         Console.WriteLine("1) Add Product");
                         Console.WriteLine("2) Edit Product");
                         Console.WriteLine("3) Display All Products");
-                        Console.WriteLine("4) Display a specific Product");
+                        Console.WriteLine("4) Display a Specific Product");
                         Console.WriteLine("\"q\" to quit");
                         choice = Console.ReadLine();
 
                         if(choice == "1")
                         {
+                            var db = new NWConsole_96_RDHContext();
+                            Products product = new Products();
+                            Console.WriteLine("Enter a product name:");
+                            product.ProductName = Console.ReadLine();
+                            var Suppliers = db.Suppliers.OrderBy(b => b.SupplierId);
+                            foreach(Suppliers s in Suppliers)
+                            {
+                                Console.WriteLine($"{s.SupplierId}: {s.CompanyName}");
+                            }
+                            Console.WriteLine("Select a Supplier ID:");
+                            product.SupplierId = Convert.ToInt32(Console.ReadLine());
+                            var Categories = db.Categories.OrderBy(b => b.CategoryId);
+                            foreach(Categories c in Categories)
+                            {
+                                Console.WriteLine($"{c.CategoryId}: {c.CategoryName}");
+                            }
+                            Console.WriteLine("Select a Category ID:"); 
+                            product.CategoryId = Convert.ToInt32(Console.ReadLine());
+                            Console.WriteLine("Enter a quantity per unit:");
+                            product.QuantityPerUnit = Console.ReadLine();
+                            Console.WriteLine("Enter the number of units in stock:");
+                            product.UnitsInStock = Convert.ToInt16(Console.ReadLine());
+                            Console.WriteLine("Enter a Unit Price:");
+                            product.UnitPrice = Convert.ToInt32(Console.ReadLine());
+                            Console.WriteLine("Enter the number of units on order:");
+                            product.UnitsOnOrder = Convert.ToInt16(Console.ReadLine());
+                            Console.WriteLine("Enter the number of units to reorder at:");
+                            product.ReorderLevel = Convert.ToInt16(Console.ReadLine());
+                            Console.WriteLine("This product is discontinued (true/false):");
+                            product.Discontinued = Convert.ToBoolean(Console.ReadLine());
+
+
+
+
+
+
 
                         }
 
@@ -164,5 +200,6 @@ namespace NorthwindConsole
 
             logger.Info("Program ended");
         }
+
     }
 }
