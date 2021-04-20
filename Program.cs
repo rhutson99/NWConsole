@@ -269,13 +269,59 @@ namespace NorthwindConsole
                                 Console.Clear();
                                 Console.WriteLine("All Products:");
 
+                                var products = db.Products.Where(p => p.Discontinued == true);
+
+
+                                Console.ForegroundColor = ConsoleColor.Magenta;
+                                Console.WriteLine("Discontinued Proudcts:");
+                                foreach(Products p in products)
+                                {
+                                  Console.WriteLine(p.ProductName);
+                                }
+
+                                Console.WriteLine();
+
+                                var products1 = db.Products.Where(p => p.Discontinued == false);
+
+                                Console.ForegroundColor = ConsoleColor.Green;
+
+                                Console.WriteLine("Active Products:");
+                                foreach(Products p in products1)
+                                {
+                                  Console.WriteLine(p.ProductName);
+                                }
+
+                                Console.ForegroundColor = ConsoleColor.White;
+
+                                Console.WriteLine();
+
+
+                                logger.Info("Dispalyed all products");
+                                Console.WriteLine();
                             }
 
                             if(choice == "2")
                             {
                                 var db = new NWConsole_96_RDHContext();
                                 Console.Clear();
+
+                                Console.ForegroundColor = ConsoleColor.Green;
+
                                 Console.WriteLine("Active Products:");
+
+                                var products = db.Products.Where(p => p.Discontinued == false);
+
+                                foreach(Products p in products)
+                                {
+                                  Console.WriteLine(p.ProductName);
+                                }
+
+                                Console.ForegroundColor = ConsoleColor.White;
+                                Console.WriteLine();
+
+
+                                logger.Info("Displayed active products");
+                                Console.WriteLine();
                                
                             } 
 
@@ -283,15 +329,30 @@ namespace NorthwindConsole
                             {
                                 var db = new NWConsole_96_RDHContext();
                                 Console.Clear();
+                                Console.ForegroundColor = ConsoleColor.Magenta;
                                 Console.WriteLine("Discontinued Products:");
-                                
-                                
+
+                                var products = db.Products.Where(p => p.Discontinued == true);
+
+                                foreach(Products p in products)
+                                {
+                                  Console.WriteLine(p.ProductName);
+                                }
+                                Console.ForegroundColor = ConsoleColor.White;
+                                Console.WriteLine();
+
+                                logger.Info("Displayed discontinued products");
+                                Console.WriteLine();
                             }
 
                         }
 
                         if(choice == "4")
                         {
+                            var db = new NWConsole_96_RDHContext();
+
+                            Console.WriteLine("Choose a product to view");
+                            var product = GetProduct(db);
                             
                         }
                     }
