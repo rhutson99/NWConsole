@@ -353,6 +353,13 @@ namespace NorthwindConsole
 
                             Console.WriteLine("Choose a product to view");
                             var product = GetProduct(db);
+                            Console.WriteLine();
+                            Console.ForegroundColor = ConsoleColor.Magenta;
+                            Console.WriteLine($"{product.ProductId} | {product.ProductName} | {product.QuantityPerUnit} | ${product.UnitPrice} | {product.UnitsInStock} | {product.UnitsOnOrder} | {product.ReorderLevel} | {product.Discontinued}");
+                            Console.WriteLine();
+                            Console.ForegroundColor = ConsoleColor.White;
+                            logger.Info($"Displayed {product.ProductName}");
+                            Console.WriteLine();
                             
                         }
                     }
