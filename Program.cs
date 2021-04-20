@@ -258,6 +258,35 @@ namespace NorthwindConsole
 
                         if(choice == "3")
                         {
+                            Console.WriteLine("1) Display All Products");
+                            Console.WriteLine("2) Display Active Products");
+                            Console.WriteLine("3) Display Discontinued Products");
+                            choice = Console.ReadLine();
+
+                            if(choice == "1")
+                            {
+                                var db = new NWConsole_96_RDHContext();
+                                Console.Clear();
+                                Console.WriteLine("All Products:");
+
+                            }
+
+                            if(choice == "2")
+                            {
+                                var db = new NWConsole_96_RDHContext();
+                                Console.Clear();
+                                Console.WriteLine("Active Products:");
+                               
+                            } 
+
+                            if(choice == "3")
+                            {
+                                var db = new NWConsole_96_RDHContext();
+                                Console.Clear();
+                                Console.WriteLine("Discontinued Products:");
+                                
+                                
+                            }
 
                         }
 
