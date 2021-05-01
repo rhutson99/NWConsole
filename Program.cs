@@ -160,12 +160,16 @@ namespace NorthwindConsole
                     {
                         var db = new NWConsole_96_RDHContext();
 
-                            var query2 = db.Products.Where(p => p.Discontinued == false);
-
-                            foreach (var p in query2)
-                            {
-                                Console.WriteLine($"\t{p.CategoryId}: {p.ProductName}");
-                            }
+                        var query2 =
+                        from c in db.Categories
+                        join p in db.Products on c.CategoryId equals p.CategoryId
+                        where p.Discontinued == false
+                        orderby c.CategoryId
+                        select new {c.CategoryName, p.ProductName};
+                        foreach(var i in query2)
+                        {
+                            Console.WriteLine($"{i.CategoryName}: {i.ProductName}",i.ProductName, i.CategoryName);
+                        }
 
                     }
 
