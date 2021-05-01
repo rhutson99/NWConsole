@@ -171,7 +171,20 @@ namespace NorthwindConsole
 
                     else if (choice == "7")
                     {
-                        //Display Specific Category and active products
+                        var db = new NWConsole_96_RDHContext();
+
+                        Console.WriteLine("Choose a category to view active products for:");
+                        var category1 = GetCategory(db);
+                        Console.ForegroundColor = ConsoleColor.Magenta;
+                        Console.WriteLine($"{category1.CategoryName}:");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        var products = db.Products.Where(p => p.CategoryId == category1.CategoryId && p.Discontinued == false);
+                        foreach(var p in products)
+                        {
+                            Console.WriteLine(p.ProductName);
+                        }
+                        logger.Info($"Displayed all active products for {category1.CategoryName}", category1.CategoryName);
+
                     }
 
                     Console.WriteLine();
