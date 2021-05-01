@@ -305,5 +305,17 @@ namespace NorthwindConsole.Model
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+        public void DeleteProduct(Products product)
+        {
+            this.Products.Remove(product);
+            this.SaveChanges();
+        }
+
+        public void DeleteCategory(Categories category)
+        {
+            this.Categories.Remove(category);
+            this.SaveChanges();
+        }
     }
 }

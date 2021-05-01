@@ -22,8 +22,8 @@ namespace NorthwindConsole
                 string choice;
                 do
                 {
-                    Console.WriteLine("1) Add/Edit/Display Categories");
-                    Console.WriteLine("2) Add/Edit/Display Products");
+                    Console.WriteLine("1) Add/Edit/Display/Delete Categories");
+                    Console.WriteLine("2) Add/Edit/Display/Delete Products");
                     Console.WriteLine("\"q\" to quit");
                     choice = Console.ReadLine();
                     
@@ -31,11 +31,12 @@ namespace NorthwindConsole
                     {
                     Console.WriteLine("1) Display Categories");
                     Console.WriteLine("2) Add Category");
-                    Console.WriteLine("3) Display Category and related products");
-                    Console.WriteLine("4) Display all Categories and their related products");
+                    Console.WriteLine("3) Display Category and related Products");
+                    Console.WriteLine("4) Display all Categories and their related Products");
                     Console.WriteLine("5) Edit a Category");
-                    Console.WriteLine("6) Display All Categories and active Products");
-                    Console.WriteLine("7) Display a specific Category and active product data");
+                    Console.WriteLine("6) Display all Categories and active Products");
+                    Console.WriteLine("7) Display a specific Category and active Product data");
+                    Console.WriteLine("8) Delete a Category");
                     Console.WriteLine("\"q\" to quit");
                     choice = Console.ReadLine();
                     Console.Clear();
@@ -191,6 +192,26 @@ namespace NorthwindConsole
 
                     }
 
+                    else if (choice == "8")
+                    {
+                            var db = new NWConsole_96_RDHContext();
+                            Console.WriteLine("Choose a category to delete:");
+                            var category = GetCategory(db);
+
+                            var test = db.Products.Any(p => p.CategoryId == category.CategoryId);
+
+                            if(test == false)
+                            {
+                               db.DeleteCategory(category);
+                               logger.Info($"successfully deleted {category.CategoryName}", category.CategoryName); 
+                            }
+
+                            if(test == true)
+                            {
+                                logger.Error("Can't delete categories if they will leave an orphaned Products record");
+                            }
+                    }
+
                     Console.WriteLine();
                     }
 
@@ -200,6 +221,7 @@ namespace NorthwindConsole
                         Console.WriteLine("2) Edit Product");
                         Console.WriteLine("3) Display All Products");
                         Console.WriteLine("4) Display a Specific Product");
+                        Console.WriteLine("5) Delete a Product");
                         Console.WriteLine("\"q\" to quit");
                         choice = Console.ReadLine();
 
@@ -427,6 +449,26 @@ namespace NorthwindConsole
                             logger.Info($"Displayed {product.ProductName}");
                             Console.WriteLine();
                             
+                        }
+
+                        if(choice == "5")
+                        {
+                            var db = new NWConsole_96_RDHContext();
+                            Console.WriteLine("Choose a product to delete:");
+                            var product = GetProduct(db);
+
+                            var test = db.OrderDetails.Any(o => o.ProductId == product.ProductId);
+
+                            if(test == false)
+                            {
+                               db.DeleteProduct(product);
+                               logger.Info($"successfully deleted {product.ProductName}", product.ProductName); 
+                            }
+
+                            if(test == true)
+                            {
+                                logger.Error("Can't delete products if they will leave an orphaned OrderDetails record");
+                            }
                         }
                     }
 
