@@ -33,6 +33,9 @@ namespace NorthwindConsole
                     Console.WriteLine("2) Add Category");
                     Console.WriteLine("3) Display Category and related products");
                     Console.WriteLine("4) Display all Categories and their related products");
+                    Console.WriteLine("5) Edit a Category");
+                    Console.WriteLine("6) Display All Categories and active Products");
+                    Console.WriteLine("7) Display a specific Category and active product data");
                     Console.WriteLine("\"q\" to quit");
                     choice = Console.ReadLine();
                     Console.Clear();
@@ -125,6 +128,52 @@ namespace NorthwindConsole
                             }
                         }
                     }
+
+                    else if (choice == "5")
+                    {
+
+                        var db = new NWConsole_96_RDHContext();
+
+                        Console.WriteLine("Choose a category to edit:");
+                        var category1 = GetCategory(db);
+                        if(category1 != null)
+                        {
+                            Categories UpdatedCategory = new Categories();
+                            UpdatedCategory.CategoryId = category1.CategoryId;
+                            Console.WriteLine("Enter a Category Name:");
+                            UpdatedCategory.CategoryName = Console.ReadLine();
+                            Console.WriteLine("Enter a description:");
+                            UpdatedCategory.Description = Console.ReadLine();
+
+                            Categories category = db.Categories.Find(UpdatedCategory.CategoryId);
+                                category.CategoryName = UpdatedCategory.CategoryName;
+                                category.Description = UpdatedCategory.Description;
+                                db.SaveChanges();
+                                logger.Info("Category updated - {CategoryName}", UpdatedCategory.CategoryName);
+
+                        }
+
+
+                    }
+
+                    else if (choice == "6")
+                    {
+                        var db = new NWConsole_96_RDHContext();
+
+                            var query2 = db.Products.Where(p => p.Discontinued == false);
+
+                            foreach (var p in query2)
+                            {
+                                Console.WriteLine($"\t{p.CategoryId}: {p.ProductName}");
+                            }
+
+                    }
+
+                    else if (choice == "7")
+                    {
+                        //Display Specific Category and active products
+                    }
+
                     Console.WriteLine();
                     }
 
@@ -394,6 +443,26 @@ namespace NorthwindConsole
             return null;
 
             
+        }
+
+        public static Categories GetCategory(NWConsole_96_RDHContext db)
+        {
+            var categories = db.Categories.OrderBy(c => c.CategoryId);
+            foreach (Categories c in categories)
+            {
+                Console.WriteLine($"{c.CategoryId}: {c.CategoryName}");
+
+            }
+            if (int.TryParse(Console.ReadLine(), out int CategoryId))
+            {
+                Categories category = db.Categories.FirstOrDefault(b => b.CategoryId == CategoryId);
+                if (category != null)
+                {
+                    return category;
+                }
+            }
+            logger.Error("Invalid Product ID");
+            return null;
         }
 
         
